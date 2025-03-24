@@ -13,4 +13,5 @@ if (isset($_SESSION['uid'])) {
 }
 
 header("Access-Control-Allow-Origin: *");
-echo json_decode($result);
+header("Content-Type: application/json");
+echo json_encode($result);
