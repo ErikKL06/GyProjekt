@@ -68,6 +68,19 @@ function setHighscore($score)
   else
     return false;
 }
+
+function addScore($score)
+{
+  $db = connectToDb();
+  $stmt = $db->prepare("INSERT INTO scores(uid, score) VALUES(:uid, :score)");
+  $stmt->bindValue(":uid", $_SESSION['uid']);
+  $stmt->bindValue(":score", $score, PDO::PARAM_INT);
+
+  if ($stmt->execute())
+    return true;
+  else
+    return false;
+}
 function getAllHighscores()
 {
   $db = connectToDb();

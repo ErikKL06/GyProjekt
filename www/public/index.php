@@ -30,6 +30,7 @@ session_start();
          </table>
          <section id="scores">
             <p id="score">Score:</p>
+            <p id="avgScore"></p>
             <h1 id="highscoreHTML">Highscore:</h1>
          </section>
       </section>

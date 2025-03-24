@@ -222,6 +222,7 @@ function checkGameOver() {
       highscore = gamescore;
       updateHighscore();
     }
+    addScore(gamescore);
     alert("Game Over");
     restart();
   }
@@ -234,6 +235,7 @@ function checkGameOver() {
         highscore = gamescore;
         updateHighscore();
       }
+      addScore(gamescore);
       alert("Game Over");
       restart();
     }
@@ -302,6 +304,22 @@ async function setHighscore(highscore) {
   const data = await response.json();
   console.log("Response data:", data);
 }
+
+async function addScore(score) {
+  console.log("Sending score:", score);
+  const response = await fetch("/api/addScore.php", {
+    method: "POST",
+    body: JSON.stringify({ score: score }),
+    headers: {
+      "Content-type": "application/json; charset=UTF-8",
+    },
+  });
+  console.log("Response status:", response.status);
+  const data = await response.json();
+  console.log("Response data:", data);
+}
+
+//!GÖR function som hämta avgScore och skicka in i tabellen
 
 async function fetchAllHighscores() {
   try {
