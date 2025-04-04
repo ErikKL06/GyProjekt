@@ -63,7 +63,9 @@ window.onload = () => {
   board = document.getElementById("board");
   context = board.getContext("2d");
   getUsername();
-  getUserScores();
+  if(userLoggedIn != "Gäst") {
+    getUserScores();
+  }
   fetchAllHighscores();
 
   //lägger in maten
@@ -311,7 +313,12 @@ function restart() {
   gamescore = 0;
   updateScore();
   fetchAllHighscores();
-  getUserScores();
+
+  getUsername();
+  if(userLoggedIn != "Gäst") {
+    getUserScores();
+  }
+
 }
 
 async function fetchHighscore() {
