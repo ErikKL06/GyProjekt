@@ -311,6 +311,7 @@ function restart() {
   gamescore = 0;
   updateScore();
   fetchAllHighscores();
+  getUserScores();
 }
 
 async function fetchHighscore() {
