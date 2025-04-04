@@ -81,6 +81,21 @@ function addScore($score)
   else
     return false;
 }
+function getUserScores()
+{
+  $db = connectToDb();
+  $stmt = $db->prepare("SELECT score FROM scores WHERE uid = :uid LIMIT 15");
+  $stmt->bindValue(":uid", $_SESSION['uid']);
+
+  $stmt->execute();
+
+  if ($stmt->rowCount() >= 1) {
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    return $result;
+  } else {
+    return $result = 0;
+  }
+}
 function getAllHighscores()
 {
   $db = connectToDb();

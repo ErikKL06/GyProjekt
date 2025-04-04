@@ -63,6 +63,7 @@ window.onload = () => {
   board = document.getElementById("board");
   context = board.getContext("2d");
   getUsername();
+  getUserScores();
   fetchAllHighscores();
 
   //lägger in maten
@@ -355,6 +356,17 @@ async function addScore(score) {
   const data = await response.json();
   console.log("Response data:", data);
 }
+async function getUserScores(){
+  let TotScore = 0;
+  let avgScore = document.getElementById("avgScore");
+  console.log("fetching user scores");
+  const response = await fetch("/api/getUserScoresAPI.php");
+  const data = await response.json();
+  data.forEach((score) => {
+    TotScore += score.score;
+  });
+  avgScore.innerHTML ="AvgScore: " + (TotScore / data.length);
+}
 
 //!GÖR funktion som hämtar avgScore och skickar in i tabellen
 
@@ -366,7 +378,6 @@ async function fetchAllHighscores() {
     }
 
     const result = await response.json();
-    console.log(result);
 
     //rensar tabellen
     //! LÖS DETTA SÅ ATT DET BLIR SMIDIGARE BORTAGNING AV TABELL RADERNA
@@ -401,7 +412,7 @@ async function getUsername() {
     }
 
     const result = await response.json();
-    console.log(result);
+    console.log("userLoggedin: "+result);
     userLoggedIn = result;
     userStatus.innerHTML = userLoggedIn;
   } catch (error) {
