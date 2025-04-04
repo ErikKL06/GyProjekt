@@ -373,7 +373,7 @@ async function getUserScores(){
   data.forEach((score) => {
     TotScore += score.score;
   });
-  avgScore.innerHTML ="AvgScore: " + (TotScore / data.length);
+  avgScore.innerHTML = "AvgScore: " + (TotScore / data.length).toFixed(2); //avrundera till 2 decimaler
 }
 
 //!GÖR funktion som hämtar avgScore och skickar in i tabellen
