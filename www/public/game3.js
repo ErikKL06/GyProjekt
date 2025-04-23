@@ -376,7 +376,6 @@ async function getUserScores(){
   avgScore.innerHTML = "Average: " + (TotScore / data.length).toFixed(2); //avrundera till 2 decimaler
 }
 
-//!GÖR funktion som hämtar avgScore och skickar in i tabellen
 
 async function fetchAllHighscores() {
   try {
