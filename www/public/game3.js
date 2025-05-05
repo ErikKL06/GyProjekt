@@ -224,7 +224,7 @@ function ritaOrm() {
   // ritar ormens huvud med rotation
   context.save();
   context.translate(snakeX + blockSize / 2, snakeY + blockSize / 2);
-  context.rotate((rotationVinkel * Math.PI) / 180);
+  context.rotate((rotationVinkel * Math.PI) / 180); //rotera ormens huvudbild
   context.drawImage(
     snakeHead,
     -blockSize / 2,
