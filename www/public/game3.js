@@ -205,7 +205,7 @@ function updateHighscore() {
 }
 
 function flyttaOrm() {
-  //flyttar orm-arrayen
+  //flyttar orm-arrayen (alltså ormens kropp utifrån huvudet)
   for (let i = snakeBody.length - 1; i > 0; i--) {
     snakeBody[i] = snakeBody[i - 1];
   }
