@@ -205,7 +205,7 @@ function updateHighscore() {
 }
 
 function flyttaOrm() {
-  //flyttar orm-arrayen
+  //flyttar orm-arrayen (alltså ormens kropp utifrån huvudet)
   for (let i = snakeBody.length - 1; i > 0; i--) {
     snakeBody[i] = snakeBody[i - 1];
   }
@@ -224,7 +224,7 @@ function ritaOrm() {
   // ritar ormens huvud med rotation
   context.save();
   context.translate(snakeX + blockSize / 2, snakeY + blockSize / 2);
-  context.rotate((rotationVinkel * Math.PI) / 180);
+  context.rotate((rotationVinkel * Math.PI) / 180); //rotera ormens huvudbild
   context.drawImage(
     snakeHead,
     -blockSize / 2,
