@@ -1,11 +1,11 @@
-//spelplan
-let blockSize = 30;
-let rows = 15;
-let cols = 15;
+// Spelplan
+const blockSize = 30;
+const rows = 15;
+const cols = 15;
 let board;
 let context;
 
-//ormens huvud
+// Ormens huvud
 let snakeX = blockSize * 5;
 let snakeY = blockSize * 5;
 
@@ -16,40 +16,40 @@ let velocityY = 0;
 // Array för att spara positionen av ormen
 let snakeBody = [];
 
-//matens positionsvariabler
+// Matens positionsvariabler
 let foodX;
 let foodY;
 
-//boolean för att kolla om spelet är över
+// Boolean för att kolla om spelet är över
 let gameOver = false;
 
-// laddar in bilder till huvudet
-let snakeHead = new Image();
+// Laddar in bilder till huvudet
+const snakeHead = new Image();
 snakeHead.src = "img/head.png";
 
-let foodImage = new Image();
+const foodImage = new Image();
 foodImage.src = "img/IdasApple.png";
 
-let snakeBodyImage = new Image();
+const snakeBodyImage = new Image();
 snakeBodyImage.src = "img/Sbody.png";
 
-//laddar in basvärden för poäng och startar async funktion till api
+// Laddar in basvärden för poäng och startar async funktion till api
 fetchHighscore();
 let gamescore = 0;
 
-//variabel för att kolla om du har ändrat position redan på samma ruta
+// Variabel för att kolla om du har ändrat position redan på samma ruta
 let directionChanged = false;
 
-//lägger till en tabell för highscores
+// Lägger till en tabell för highscores
 let table = document.getElementById("highscoreTable");
 
 let score = document.getElementById("score");
 score.innerHTML = "Score: " + gamescore;
 
-//variabel för att kolla vem som är inloggad
+// Variabel för att kolla vem som är inloggad
 let userLoggedIn = "";
 
-//variabel för att vrida huvudet
+// Variabel för att vrida huvudet
 let rotationVinkel = 0;
 
 // Variabler för requestAnimationFrame timing
@@ -57,21 +57,21 @@ let lastTime = 0;
 let frameInterval = 1000 / 6; // Samma som setInterval timing (6 FPS)
 let accumulator = 0;
 
-// funktion som säger vad som händer när sidan laddas in
+// Funktion som säger vad som händer när sidan laddas in
 window.onload = () => {
   // Variabel till spelplanen
   board = document.getElementById("board");
   context = board.getContext("2d");
   getUsername();
-  if(userLoggedIn != "Gäst") {
+  if (userLoggedIn != "Gäst") {
     getUserScores();
   }
   fetchAllHighscores();
 
-  //lägger in maten
+  // Lägger in maten
   placeFood();
 
-  // händelselyssnare för att styra ormen
+  // Händelselyssnare för att styra ormen
   document.addEventListener("keyup", changeDirection);
 
   // Starta animationsloopen med requestAnimationFrame
@@ -102,57 +102,57 @@ function gameLoop(timestamp) {
 }
 
 function update() {
-  // kollar och gameover och om det är sant så lämnar man funktionen
+  // Kollar och gameover och om det är sant så lämnar man funktionen
   if (gameOver) {
     return;
   }
 
-  rensaBoard(); //rensar spelplanen
-  // ritar ut maten
+  rensaBoard(); // Rensar spelplanen
+  // Ritar ut maten
   context.drawImage(foodImage, foodX, foodY, blockSize, blockSize);
 
-  renderGrid(); //ritar ut rutnätet
+  renderGrid(); // Ritar ut rutnätet
 
-  checkFood(); //kollar om maten är uppäten
+  checkFood(); // Kollar om maten är uppäten
 
-  flyttaOrm(); //flyttar ormen
+  flyttaOrm(); // Flyttar ormen
 
-  updateraOrmPos(); //uppdaterar ormens position
+  updateraOrmPos(); // Uppdaterar ormens position
 
-  ritaOrm(); //ritar ut allt
+  ritaOrm(); // Ritar ut allt
 
-  kollaGameOver(); //kollar om spelet är över
+  kollaGameOver(); // Kollar om spelet är över
 
   directionChanged = false; // Återställer riktningsändringsflaggan
 }
 
 function renderGrid() {
-  const xMax = board.width; // bredden på canvasen
-  const yMax = board.height; // höjden på canvasen
-  const gridSize = 30; // storlek på rutorna
+  const xMax = board.width; // Bredden på canvasen
+  const yMax = board.height; // Höjden på canvasen
+  const gridSize = 30; // Storlek på rutorna
 
-  //ritar ut rutnätet
+  // Ritar ut rutnätet
   context.beginPath();
   context.strokeStyle = "#3A5A40"; // Rutnätets linjefärg
 
   // Vertikala rutnätslinjer
   for (let x = 0; x <= xMax; x += gridSize) {
-    context.moveTo(x, 0); // flyttar linjerna ända vägen upp till botten
+    context.moveTo(x, 0); // Flyttar linjerna ända vägen upp till botten
     context.lineTo(x, yMax);
   }
 
   // Horisontella rutnätslinjer
   for (let y = 0; y <= yMax; y += gridSize) {
-    context.moveTo(0, y); //flyttar till starten av raden
-    context.lineTo(xMax, y); //ritar till slutet av raden
+    context.moveTo(0, y); // Flyttar till starten av raden
+    context.lineTo(xMax, y); // Ritar till slutet av raden
   }
 
-  context.stroke(); //rita ut allt
+  context.stroke(); // Rita ut allt
 }
 
-// funktion för att ändra håll ormen åker åt
+// Funktion för att ändra håll ormen åker åt
 function changeDirection(e) {
-  if (directionChanged) return; //hindrar att kunna ändra håll på samma ruta
+  if (directionChanged) return; // Hindrar att kunna ändra håll på samma ruta
 
   if ((e.code == "ArrowUp" || e.code == "KeyW") && velocityY != 1) {
     velocityX = 0;
@@ -178,19 +178,19 @@ function changeDirection(e) {
 }
 
 function rensaBoard() {
-  //rensar spelplanen
+  // Rensar spelplanen
   context.fillStyle = "#588157";
   context.fillRect(0, 0, board.width, board.height);
 }
 
 function checkFood() {
-  // kollar om ormen ätit mat
+  // Kollar om ormen ätit mat
   if (snakeX == foodX && snakeY == foodY) {
-    //lägger till en ruta på ormen om den har ätit
+    // Lägger till en ruta på ormen om den har ätit
     snakeBody.push([foodX, foodY]);
     gamescore += 1;
     updateScore();
-    //placera ut ny mat
+    // Placera ut ny mat
     placeFood();
   }
 }
@@ -205,7 +205,7 @@ function updateHighscore() {
 }
 
 function flyttaOrm() {
-  //flyttar orm-arrayen (alltså ormens kropp utifrån huvudet)
+  // Flyttar orm-arrayen (alltså ormens kropp utifrån huvudet)
   for (let i = snakeBody.length - 1; i > 0; i--) {
     snakeBody[i] = snakeBody[i - 1];
   }
@@ -215,16 +215,22 @@ function flyttaOrm() {
 }
 
 function updateraOrmPos() {
-  // uppdaterar ormens position
+  // Uppdaterar ormens position
+  // Beräknar ny X-koordinat baserat på hastighet och rutstorlek
   snakeX += velocityX * blockSize;
+  // Beräknar ny Y-koordinat baserat på hastighet och rutstorlek
   snakeY += velocityY * blockSize;
 }
 
 function ritaOrm() {
-  // ritar ormens huvud med rotation
+  // Ritar ormens huvud med rotation
+  // Sparar nuvarande canvas-tillstånd för att inte påverka andra ritoperationer
   context.save();
+  // Flyttar ritpunkten till mitten av ormens huvud för korrekt rotation
   context.translate(snakeX + blockSize / 2, snakeY + blockSize / 2);
-  context.rotate((rotationVinkel * Math.PI) / 180); //rotera ormens huvudbild
+  // Roterar ormens huvudbild baserat på riktningen
+  context.rotate((rotationVinkel * Math.PI) / 180); // Roterar ormens huvudbild
+  // Ritar huvudet centrerat kring rotationspunkten
   context.drawImage(
     snakeHead,
     -blockSize / 2,
@@ -232,10 +238,13 @@ function ritaOrm() {
     blockSize,
     blockSize
   );
+  // Återställer canvas-tillståndet till innan rotationen
   context.restore();
 
-  // ritar ut ormens kropp
+  // Ritar ut ormens kropp
+  // Loopar genom varje kroppsdel i snakeBody-arrayen
   for (let i = 0; i < snakeBody.length; i++) {
+    // Ritar kroppsdelens bild på rätt position
     context.drawImage(
       snakeBodyImage,
       snakeBody[i][0],
@@ -247,7 +256,7 @@ function ritaOrm() {
 }
 
 function kollaGameOver() {
-  // kollar om det är gameover
+  // Kollar om det är gameover
   if (
     snakeX < 0 ||
     snakeX >= cols * blockSize ||
@@ -282,16 +291,16 @@ function kollaGameOver() {
   }
 }
 
-//funktion för att placera mat
+// Funktion för att placera mat
 function placeFood() {
   let validPosition = false;
 
   while (!validPosition) {
-    // genererar position för nytt äpple
+    // Genererar position för nytt äpple
     foodX = Math.floor(Math.random() * cols) * blockSize;
     foodY = Math.floor(Math.random() * rows) * blockSize;
 
-    //kollar så att ormens kropp inte är på samma position
+    // Kollar så att ormens kropp inte är på samma position
     validPosition = true;
     for (let i = 0; i < snakeBody.length; i++) {
       if (foodX === snakeBody[i][0] && foodY === snakeBody[i][1]) {
@@ -302,6 +311,7 @@ function placeFood() {
   }
 }
 
+//
 function restart() {
   snakeX = blockSize * 5;
   snakeY = blockSize * 5;
@@ -315,10 +325,9 @@ function restart() {
   fetchAllHighscores();
 
   getUsername();
-  if(userLoggedIn != "Gäst") {
+  if (userLoggedIn != "Gäst") {
     getUserScores();
   }
-
 }
 
 async function fetchHighscore() {
@@ -364,7 +373,8 @@ async function addScore(score) {
   const data = await response.json();
   console.log("Response data:", data);
 }
-async function getUserScores(){
+
+async function getUserScores() {
   let TotScore = 0;
   let avgScore = document.getElementById("avgScore");
   console.log("fetching user scores");
@@ -373,9 +383,8 @@ async function getUserScores(){
   data.forEach((score) => {
     TotScore += score.score;
   });
-  avgScore.innerHTML = "Average: " + (TotScore / data.length).toFixed(2); //avrundera till 2 decimaler
+  avgScore.innerHTML = "Average: " + (TotScore / data.length).toFixed(2); // Avrundera till 2 decimaler
 }
-
 
 async function fetchAllHighscores() {
   try {
@@ -386,21 +395,21 @@ async function fetchAllHighscores() {
 
     const result = await response.json();
 
-    //rensar tabellen
-    //! LÖS DETTA SÅ ATT DET BLIR SMIDIGARE BORTAGNING AV TABELL RADERNA
+    // Rensar tabellen
+    // !LÖS DETTA SÅ ATT DET BLIR SMIDIGARE BORTAGNING AV TABELL RADERNA
     while (table.rows.length > 1) {
       table.deleteRow(1);
     }
 
-    //Lägger till alla highscores i tabellen med en forEach loop eftersom att det är en associativ array
+    // Lägger till alla highscores i tabellen med en forEach loop eftersom att det är en associativ array
     result.forEach((highscore, index) => {
-      let row = table.insertRow(index + 1); //lägger till en ny rad efter den andra
+      let row = table.insertRow(index + 1); // Lägger till en ny rad efter den andra
       let cell1 = row.insertCell(0);
       let cell2 = row.insertCell(1);
       cell1.innerHTML = highscore.username;
       cell2.innerHTML = highscore.highscore;
       if (highscore.username === userLoggedIn) {
-        //stylar användarnamnet om det är samma som den inloggade användaren
+        // Stylar användarnamnet om det är samma som den inloggade användaren
         row.style.color = "#ed1c24";
         row.style.fontWeight = "bold";
       }
@@ -419,7 +428,7 @@ async function getUsername() {
     }
 
     const result = await response.json();
-    console.log("userLoggedin: "+result);
+    console.log("userLoggedin: " + result);
     userLoggedIn = result;
     userStatus.innerHTML = userLoggedIn;
   } catch (error) {
